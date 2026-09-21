@@ -2,10 +2,10 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // ⚠️ Yahan apni admin email likhein (wahi jo Firebase Authentication mein banayi hai)
+    // Admin email (wahi jo Firebase Authentication mein banayi hai)
     function isAdmin() {
       return request.auth != null
-        && request.auth.token.email in ['admin@example.com'];
+        && request.auth.token.email in ['muneeburrehmana6@gmail.com'];
     }
 
     // Order sahi shakal mein aaya hai ya nahi (customer sirf naya order bana sakta hai)
