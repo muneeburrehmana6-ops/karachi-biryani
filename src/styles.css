@@ -461,3 +461,20 @@ button.chip.on { background: var(--yellow); border-color: var(--ink); }
   .float-btn span { display: none; }
   .float-btn { padding: .85rem; }
 }
+
+/* ---------- login / sign up ---------- */
+.auth-card { width: min(440px, 100%); margin: 1rem auto 3rem; box-shadow: 8px 8px 0 var(--yellow); }
+.auth-alt { text-align: center; margin: .9rem 0 0; }
+.auth-links { display: flex; align-items: center; gap: .5rem; }
+.auth-links .hello { font-weight: 600; max-width: 9rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.nav-auth { display: none; }
+
+@media (max-width: 900px) {
+  .auth-links .hello { display: none; }
+}
+@media (max-width: 760px) {
+  .auth-links { display: none; }
+  .nav-auth { display: flex; flex-direction: column; border-top: 2px dashed var(--line); margin-top: .4rem; padding-top: .4rem; }
+  .nav-auth a, .nav-auth .link-btn, .nav-auth .hello { padding: .8rem .5rem; text-align: left; }
+  .nav-auth .link-btn { text-decoration: none; color: var(--ink); font-size: 1rem; }
+}

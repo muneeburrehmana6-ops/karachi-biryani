@@ -35,7 +35,7 @@ export default function Footer() {
       </div>
       <div className="container footer-bottom">
         <span>© {new Date().getFullYear()} {RESTAURANT.name}</span>
-        <Link to="/admin" className="admin-link">Staff login</Link>
+        <Link to="/login" className="admin-link">Log in / Sign up</Link>
       </div>
     </footer>
   );

@@ -14,7 +14,7 @@ Out for delivery, Delivered), paid mark karna, cancel karna, aaj ki sale.
 **Offers tab:** roz ki offer ka poster ya video lagana, upar wali announcement patti badalna.
 
 > **Demo mode:** Firebase connect kiye baghair bhi poori site aur admin panel chalta hai.
-> Admin login: `http://localhost:5173/admin`, email `admin@demo.com`, password `admin123`.
+> Admin login: `http://localhost:5173/login`, email `admin@demo.com`, password `admin123` (sign up bhi demo mein isi browser mein chalta hai).
 > Menu, offers, orders aur photo (chhoti kar ke) sab isi browser ki storage mein save hote hain, is liye aap admin ki har cheez
 > try kar sakte hain. Website par order karein aur usi browser ke admin panel mein dekhein. Admin ke upar "Demo data reset karein" se shuru wali halat wapas aa jati hai.
 > Jaise hi `.env` mein Firebase ki values bhar dein, demo mode band ho jata hai aur asli database + asli admin login chalta hai.
@@ -52,7 +52,7 @@ Menu ke items admin panel se badalte hain (step 4).
    VITE_FIREBASE_APP_ID=...
    ```
 7. **Firestore Database > Rules** tab kholein. `firestore.rules` file ka poora content paste karein.
-   **Sabse zaroori:** rules mein `admin@example.com` ki jagah wahi email likhein jo step 4 mein banayi thi. Phir **Publish**.
+   **Sabse zaroori:** rules mein `isAdmin()` ke andar admin ki **UID** likhein (email nahi). UID Firebase > Authentication > Users mein "User UID" column mein milti hai. Phir **Publish**.
 8. `npm run dev` dobara chalayen (`.env` badalne ke baad restart zaroori hai).
 
 ## 4. Admin panel istemal karna
@@ -62,6 +62,15 @@ Menu ke items admin panel se badalte hain (step 4).
 3. Website se ek test order karein. **Orders** tab mein foran nazar aayega.
 
 Photos: apni photos `public/images/` mein rakhein, aur item edit karte waqt "Photo ka link" mein `/images/naam.jpg` likhein.
+
+## Login aur Sign up
+
+- Website ke header mein **Log in** aur **Sign up** buttons hain (`/login`, `/signup`).
+- Customer pehle Sign up karta hai (naam, email, password), phir Log in. Login ke baad checkout mein naam khud bhar jata hai.
+- Admin apni email aur password se Log in karta hai aur khud `/admin` (staff panel) mein pohanch jata hai. Baaqi users ko staff panel nahi khulta ("No access").
+- Admin wahi hai jis ki UID `firestore.rules` mein likhi hai. Naya admin banana ho: Firebase mein user banayen, uski UID copy karein, rules mein `['UID-1', 'UID-2']` likh kar Publish karein.
+- Firebase Authentication mein **Email/Password** enable hona zaroori hai (sign up bhi isi se chalta hai).
+- Ordering ke liye login zaroori nahi, guest bhi order kar sakta hai.
 
 ## 5. GitHub par upload
 
@@ -121,6 +130,27 @@ Domain add karne ke baad Firebase ke **Authorized domains** mein bhi wo domain a
 
 ---
 
+## 10. Firebase Hosting par deploy (domain Vercel se liya ho)
+
+Project mein `firebase.json` pehle se hai. Firebase Hosting Vercel ki tarah hi site chalata hai, aur database/login pehle se Firebase mein hain.
+
+1. Ek baar: `npm install -g firebase-tools` phir `firebase login`.
+2. Project folder mein: `firebase use --add` aur apna Firebase project chunein (alias `default`).
+3. Site deploy: `npm run deploy:site` (pehle build banata hai, phir upload). `.env` ki values build ke waqt site mein shamil ho jati hain, is liye Vercel jaisa Environment Variables ka koi kaam nahi.
+4. Rules deploy (rules file badalne ke baad): `npm run deploy:rules`. Ya dono ek saath: `npm run deploy`.
+5. Site `https://PROJECT-ID.web.app` par khul jayegi. Admin: `/admin`.
+
+### Apna domain lagana
+1. Vercel > **Domains** se domain khareedein.
+2. Firebase Console > **Hosting > Add custom domain** > domain likhein. Firebase ek **TXT** record (verification) aur **A** records dikhayega.
+3. Vercel > **Domains > apna domain > DNS Records** mein wahi records add karein (Type, Name, Value bilkul waisa jaisa Firebase ne dikhaya). Domain ko Vercel ke kisi project se jorna nahi, warna wahi use ho jata hai.
+4. Firebase mein "Verify" dabayen. SSL (https) khud ban jata hai, kabhi kabhi kuch ghante lagte hain.
+5. Firebase Console > **Authentication > Settings > Authorized domains** mein apna domain (aur `www.` wala agar use karein) add karein, warna admin login nahi hoga.
+
+Agar site Vercel par hi rakhni ho: domain Vercel ke Project > Settings > Domains mein add ho jata hai, is mein Firebase Hosting ki zaroorat nahi. Database aur login phir bhi Firebase se chalte rahenge.
+
+---
+
 ## Project ka structure
 
 ```
@@ -137,6 +167,7 @@ src/
   cloudinary.js        photo/video upload
   styles.css           poori website ka design
 firestore.rules        database ki security rules
+firebase.json          Firebase Hosting ki setting
 vercel.json            page refresh par 404 na aaye
 ```
 

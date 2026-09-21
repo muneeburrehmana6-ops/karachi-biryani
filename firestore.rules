@@ -2,10 +2,13 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // Admin email (wahi jo Firebase Authentication mein banayi hai)
+    // Admin accounts. Yahan admin ki UID likhein (email nahi).
+    // UID kahan milti hai: Firebase > Authentication > Users > "User UID" column.
+    // Ek se zyada admin hon to: ['UID-1', 'UID-2']
+    // (UID isliye ke Sign up sab ke liye khula hai. Email kisi ki bhi likhi ja sakti hai, UID nahi.)
     function isAdmin() {
       return request.auth != null
-        && request.auth.token.email in ['muneeburrehmana6@gmail.com'];
+        && request.auth.uid in ['ghxbgPYhUVNqI7sOM7KdQmzASat2'];
     }
 
     // Order sahi shakal mein aaya hai ya nahi (customer sirf naya order bana sakta hai)

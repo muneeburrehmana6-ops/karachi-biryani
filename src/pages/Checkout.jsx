@@ -2,6 +2,7 @@ import { useRef, useState } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { createOrder, isLocalMode } from "../store";
 import { useCart } from "../context/CartContext";
+import { useAuth } from "../context/AuthContext";
 import { RESTAURANT } from "../config";
 import { fmt, isValidPkMobile, makeOrderNo, normalizePhone, orderText, waLink } from "../utils";
 
@@ -22,10 +23,14 @@ function saved() {
 
 export default function Checkout() {
   const { lines, subtotal, deliveryFee, total, clear } = useCart();
+  const { user } = useAuth();
   const nav = useNavigate();
   const placed = useRef(false);
 
-  const [form, setForm] = useState(() => ({ name: "", phone: "", address: "", notes: "", ...saved() }));
+  const [form, setForm] = useState(() => {
+    const prev = saved();
+    return { name: "", phone: "", address: "", notes: "", ...prev, name: prev.name || (user && user.displayName) || "" };
+  });
   const [pay, setPay] = useState("cod");
   const [errors, setErrors] = useState({});
   const [busy, setBusy] = useState(false);

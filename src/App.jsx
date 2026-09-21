@@ -1,5 +1,5 @@
 import { lazy, Suspense } from "react";
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import Layout from "./components/Layout";
 import Home from "./pages/Home";
 import Menu from "./pages/Menu";
@@ -9,11 +9,12 @@ import Order from "./pages/Order";
 import Track from "./pages/Track";
 import Contact from "./pages/Contact";
 import About from "./pages/About";
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
 import NotFound from "./pages/NotFound";
 
 // Admin pages alag chunk mein load hote hain, taake customer ki site halki rahe
 const AdminLayout = lazy(() => import("./pages/admin/AdminLayout"));
-const AdminLogin = lazy(() => import("./pages/admin/Login"));
 const AdminOrders = lazy(() => import("./pages/admin/Orders"));
 const AdminMenu = lazy(() => import("./pages/admin/MenuManager"));
 const AdminOffers = lazy(() => import("./pages/admin/OffersManager"));
@@ -31,10 +32,12 @@ export default function App() {
         <Route path="/track" element={<Track />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/about" element={<About />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
         <Route path="*" element={<NotFound />} />
       </Route>
 
-      <Route path="/admin/login" element={<AdminLogin />} />
+      <Route path="/admin/login" element={<Navigate to="/login" replace />} />
       <Route path="/admin" element={<AdminLayout />}>
         <Route index element={<AdminOrders />} />
         <Route path="menu" element={<AdminMenu />} />

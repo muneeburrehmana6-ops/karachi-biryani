@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { useCart } from "../context/CartContext";
+import { useAuth } from "../context/AuthContext";
 import { RESTAURANT } from "../config";
 
 const LINKS = [
@@ -13,6 +14,8 @@ const LINKS = [
 
 export default function Header() {
   const { count } = useCart();
+  const { user, isAdmin, logout } = useAuth();
+  const firstName = user ? (user.displayName || user.email || "").split(/[\s@]/)[0] : "";
   const [open, setOpen] = useState(false);
   const close = () => setOpen(false);
 
@@ -33,9 +36,37 @@ export default function Header() {
               {label}
             </NavLink>
           ))}
+          <div className="nav-auth">
+            {user ? (
+              <>
+                <span className="hello">Hi, {firstName}</span>
+                {isAdmin && <Link to="/admin" onClick={close}>Admin panel</Link>}
+                <button type="button" className="link-btn" onClick={() => { close(); logout(); }}>Log out</button>
+              </>
+            ) : (
+              <>
+                <Link to="/login" onClick={close}>Log in</Link>
+                <Link to="/signup" onClick={close}>Sign up</Link>
+              </>
+            )}
+          </div>
         </nav>
 
         <div className="header-actions">
+          <div className="auth-links">
+            {user ? (
+              <>
+                <span className="hello" title={user.email}>Hi, {firstName}</span>
+                {isAdmin && <Link to="/admin" className="btn btn-yellow btn-sm">Admin panel</Link>}
+                <button type="button" className="btn btn-ghost btn-sm" onClick={logout}>Log out</button>
+              </>
+            ) : (
+              <>
+                <Link to="/login" className="btn btn-ghost btn-sm">Log in</Link>
+                <Link to="/signup" className="btn btn-ink btn-sm">Sign up</Link>
+              </>
+            )}
+          </div>
           <Link to="/cart" className="cart-btn" onClick={close} aria-label={`Cart, ${count} items`}>
             Cart <span className="badge">{count}</span>
           </Link>
