@@ -1,0 +1,26 @@
+import { initializeApp } from "firebase/app";
+import { getFirestore } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
+
+const cfg = {
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+};
+
+// Agar .env bhara nahi hai to site "demo mode" mein chalti hai (sample menu, orders WhatsApp par)
+export const isFirebaseConfigured = Boolean(cfg.apiKey && cfg.projectId);
+
+let db = null;
+let auth = null;
+
+if (isFirebaseConfigured) {
+  const app = initializeApp(cfg);
+  db = getFirestore(app);
+  auth = getAuth(app);
+}
+
+export { db, auth };
